@@ -1,214 +1,230 @@
-## RefreshFlatList
+# react-native-smart-barcode
 
-[![npm](https://img.shields.io/npm/v/react-native-refreshflatlist.svg)](https://www.npmjs.com/package/react-native-refreshflatlist)
-[![npm](https://img.shields.io/npm/dm/react-native-refreshflatlist.svg)](https://www.npmjs.com/package/react-native-refreshflatlist)
-[![npm](https://img.shields.io/npm/dt/react-native-refreshflatlist.svg)](https://www.npmjs.com/package/react-native-refreshflatlist)
+[![npm](https://img.shields.io/npm/v/react-native-smart-barcode.svg)](https://www.npmjs.com/package/react-native-smart-barcode)
+[![npm](https://img.shields.io/npm/dm/react-native-smart-barcode.svg)](https://www.npmjs.com/package/react-native-smart-barcode)
+[![npm](https://img.shields.io/npm/dt/react-native-smart-barcode.svg)](https://www.npmjs.com/package/react-native-smart-barcode)
+[![npm](https://img.shields.io/npm/l/react-native-smart-barcode.svg)](https://github.com/react-native-component/react-native-smart-barcode/blob/master/LICENSE)
 
-> A simple support ios and android platform custom header refresh components(RN >= 0.43)
+A smart barcode scanner component for React Native app.
+The library uses [https://github.com/zxing/zxing][1] to decode the barcodes for android, and also supports ios.
 
+## Preview
 
+![react-native-smart-barcode-preview-ios][2]
 
-```
-npm i react-native-refreshflatlist --save
-react-native link react-native-refreshflatlist
-```
-
-### Preview
-
-* ScreenShot
-
-<img src="img/ios.gif" width = "30%" />
-<br>
-<img src="img/android.gif" width = "30%" />
-
-
-
-* ViewType
+## Installation
 
 ```
-// ScrollView
-_renderItem = (isTriggerPressFn) => {
-	return (
-	  <View style={{width: width, height: 100}} >
-	    <Text>{'Customer ScrollView'} </Text>
-	  </View>
-	)
-}
-
-// ListView
-_renderItem = (isTriggerPressFn, data) => {
-    return (
-      <View style={{width: width, height: 100}} >
-        <Text>{'Customer ListVeiw' + item.title} </Text>
-      </View>
-    )
-  }
+npm install react-native-smart-barcode --save
 ```
 
-### Demo
+## Notice
 
+It can only be used greater-than-equal react-native 0.4.0 for ios, if you want to use the package less-than react-native 0.4.0, use `npm install react-native-smart-barcode@untilRN0.40 --save`
+
+
+## Installation (iOS)
+
+* Drag RCTBarCode.xcodeproj to your project on Xcode.
+
+* Click on your main project file (the one that represents the .xcodeproj) select Build Phases and drag libRCTBarCode.a from the Products folder inside the RCTBarCode.xcodeproj.
+
+* Look for Header Search Paths and make sure it contains $(SRCROOT)/../../../react-native/React as recursive.
+
+* Dray raw folder to your project
+
+* Add `Privacy - Camera Usage Description` property in your info.plist(for ios 10)
+
+## Installation (Android)
+
+* In `android/settings.gradle`
 
 ```
-git clone https://github.com/naivehhr/react-native-refreshflatlist.git
-cd react-native-refreshflatlist/example && npm install
-
+...
+include ':react-native-smart-barcode'
+project(':react-native-smart-barcode').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-smart-barcode/android')
 ```
 
-### Usage
+* In `android/app/build.gradle`
 
 ```
-export default class FlatListTest extends Component {
-  constructor() {
-    super()
-    this.state = {
-      headerHeight: 100,
-      refreshing: false,
-      _data: [],
-      footerMsg: ''
-    }
-  }
-  componentDidMount() {
-    this.setState({_data: [1,2,3,4]})
-  }
-
-  _onRefreshFun = () => {
-    this.setState({refreshing: true})
-    setTimeout(() => {
-      this.setState({refreshing: false})
-    },2000)
-  }
-
-  onPress(isTriggerPressFn) {
-    //isTriggerPressFn Only in Android Settings.
-    if (isTriggerPressFn()) {
-      Alert.alert('onPress')
-    }
-  }
-
-  _renderItem = (isTriggerPressFn, data) => {
-    return (
-      <View style={{ width: width, height: 100 }} >
-        <Text>{'The Customer ListView'} </Text>
-        <Button onPress={this.onPress.bind(this, isTriggerPressFn)} title={'btn'} />
-      </View>
-    )
-  }
-  
-  
-	/**
-    * refreshState: 0: pullToRefresh; 1: releaseToRefresh; 2: refreshing; 3: refreshdown
-    * percent:
-    */
-  _customerHeader = (refreshState, percent) => {
-    const { headerHeight, msg } = this.state
-    switch (refreshState) {
-      case RefreshState.pullToRefresh:
-        return (
-          <Animated.View style={{justifyContent: 'center', alignItems: 'center', width: width, height: headerHeight, backgroundColor: 'red'}} >
-            <Text>{ 'pull to refresh' + percent }</Text>
-          </Animated.View>
-        )
-      case RefreshState.releaseToRefresh:
-        return (
-          <Animated.View style={{justifyContent: 'center', alignItems: 'center', width: width, height: headerHeight, backgroundColor: 'red'}} >
-            <Text>{ 'release to refresh' + percent }</Text>
-          </Animated.View>
-        )
-      case RefreshState.refreshing:
-        return (
-          <Animated.View style={{justifyContent: 'center', alignItems: 'center', width: width, height: headerHeight, backgroundColor: 'red'}} >
-            <Text>{ 'refreshing....' + percent }</Text>
-          </Animated.View>
-        )
-      case RefreshState.refreshdown:
-        return (
-          <Animated.View style={{ flexDirection: 'row',height: headerHeight, justifyContent: 'center', alignItems: 'center', backgroundColor: 'red',}}>
-            <Text>{ 'refresh complete' }</Text>
-          </Animated.View>
-        )
-      default:
-        return (
-          <View style={{justifyContent: 'center', alignItems: 'center', height: headerHeight, width: width}}>
-            <Text>{ percent }</Text>
-          </View>
-        )
-    }
-  }
-
-  _listFooterComponent = () => {
-    return (
-      <View style={{ flex:1, justifyContent: 'center', alignItems: 'center',width: width, height: 30, backgroundColor: 'red'}} >
-         <Text style={{textAlign: 'center',}}> { this.state.footerMsg } </Text>
-      </View>
-    )
-  }
-
-  _onEndReached = () => {
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <RefreshFlatList
-          data={this.state._data}
-          refreshing={this.state.refreshing}
-          onRefreshFun={this._onRefreshFun}
-          onEndReached={this._onEndReached}
-          customRefreshView={this._customerHeader}
-          listFooterComponent={this._listFooterComponent}
-          renderItem={this._renderItem}
-          viewType={ViewType.ListView}
-        />
-      </View>
-    );
-  }
+...
+dependencies {
+    ...
+    // From node_modules
+    compile project(':react-native-smart-barcode')
 }
 ```
 
-### Props
-* * * 
+* In MainApplication.java
 
-| Prop              	| Type    |  Optional  | Default | Description | Platform |
-| --------          	| -----   | ----       | -----   | ----        | ----     |
-| ...ListView.propTypes	| | | | [doc](http://facebook.github.io/react-native/docs/flatlist.html) | |
-| customRefreshView		| func	| Yes | DefaultView | 自定义头部组件 | all |
-| onRefreshFun		   	| func	| Yes | DefaultTestFun | 触发刷新调用的方法 | all |
-| onEndReached		   	| func	| Yes | DefaultTestFun | 触发加载调用的方法 | all |
-| isTriggerPressFn     	| func | Yes | return true | 列表滑动中，判断是否应响应触摸点的点击事件(button的onPress事件)；只有回到原点才会触发 | android |
-| isRefreshing         	| boolean | | false |  | all |
-| viewType        		| object | Yes | ScrollView | ScrollView, ListView| all |
+```
+...
+private ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    //  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+    @Override
+    protected boolean getUseDeveloperSupport() {
+      return BuildConfig.DEBUG;
+    }
+
+    @Override
+    protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+              new MainReactPackage()
+      );
+    }
+  };
+
+  public void setReactNativeHost(ReactNativeHost reactNativeHost) {
+    mReactNativeHost = reactNativeHost;
+  }
+
+  @Override
+  public ReactNativeHost getReactNativeHost() {
+    return mReactNativeHost;
+  }
+...
+```
+
+* In MainActivity.java
+```
+...
+import com.reactnativecomponent.barcode.RCTCapturePackage;    //import RCTCapturePackage
+...
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    MainApplication application = (MainApplication) this.getApplication();
+    application.setReactNativeHost(new ReactNativeHost(application) {
+        @Override
+        protected boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+                    new MainReactPackage(),
+                    new RCTCapturePackage(MainActivity.this)    //register Module
+            );
+        }
+
+    });
+
+    super.onCreate(savedInstanceState);
+}
+```
+
+* In AndroidManifest.xml, add camera permissions
+```
+...
+<uses-permission android:name="android.permission.CAMERA"/>
+<uses-permission android:name="android.permission.VIBRATE"/>
+
+<uses-feature android:name="android.hardware.camera"/>
+<uses-feature android:name="android.hardware.camera.autofocus"/>
+...
+```
 
 
+## Full Demo
+
+see [ReactNativeComponentDemos][0]
+
+## Usage
+
+Install the package from npm with `npm install react-native-smart-barcode --save`.
+Then, require it from your app's JavaScript files with `import Barcode from 'react-native-smart-barcode'`.
+
+```js
 
 
-> 注： 本组件Android手势模块基于 [react-native-smart-pull-to-refresh-listview](https://github.com/react-native-component/react-native-smart-pull-to-refresh-listview/)
+import React, {
+    Component,
+} from 'react'
+import {
+    View,
+    StyleSheet,
+    Alert,
+} from 'react-native'
 
-## 更新日志
+import Barcode from 'react-native-smart-barcode'
+import TimerEnhance from 'react-native-smart-timer-enhance'
 
-2017/06/23
+class BarcodeTest extends Component {
 
-* 升级RN至0.45.1
-* 集成React Navigation
-* 更改ScrollView为FlatList实现
-* 更新example
+    // 构造
+    constructor(props) {
+        super(props);
+        // 初始状态
+        this.state = {
+            viewAppear: false,
+        };
+    }
 
-2017/06/30
+    render() {
 
-* 代码结构
-* 优化性能
-* ScrollView下刷新 => render整个页面
+        return (
+            <View style={{flex: 1, backgroundColor: 'black',}}>
+                {this.state.viewAppear ? <Barcode style={{flex: 1, }}
+                                                  ref={ component => this._barCode = component }
+                                                  onBarCodeRead={this._onBarCodeRead}/> : null}
+            </View>
+        )
+    }
 
-2017/07/3
+    componentDidMount() {
+        let viewAppearCallBack = (event) => {
+            this.setTimeout( () => {
+                this.setState({
+                    viewAppear: true,
+                })
+            }, 255)
 
-* 更改android手势触发逻辑
+        }
+        this._listeners = [
+            this.props.navigator.navigationContext.addListener('didfocus', viewAppearCallBack)
+        ]
 
-2017/12/27
+    }
 
-* 修复一些情况下Android平台滑动列表时触发子元素点击事件的问题
+    componentWillUnmount () {
+        this._listeners && this._listeners.forEach(listener => listener.remove());
+    }
 
-2018/1/09
+    _onBarCodeRead = (e) => {
+        console.log(`e.nativeEvent.data.type = ${e.nativeEvent.data.type}, e.nativeEvent.data.code = ${e.nativeEvent.data.code}`)
+        this._stopScan()
+        Alert.alert(e.nativeEvent.data.type, e.nativeEvent.data.code, [
+            {text: 'OK', onPress: () => this._startScan()},
+        ])
+    }
 
-* 升级至RN0.51
+    _startScan = (e) => {
+        this._barCode.startScan()
+    }
 
-## 问题
+    _stopScan = (e) => {
+        this._barCode.stopScan()
+    }
 
+}
+
+export default TimerEnhance(BarcodeTest)
+```
+
+## Props
+
+Prop                   | Type   | Optional | Default   | Description
+---------------------- | ------ | -------- | --------- | -----------
+barCodeTypes           | array  | Yes      |           | determines the supported barcodeTypes
+scannerRectWidth       | number | Yes      | 255       | determines the width of scannerRect
+scannerRectHeight      | number | Yes      | 255       | determines the height of scannerRect
+scannerRectTop         | number | Yes      | 0         | determines the top shift of scannerRect
+scannerRectLeft        | number | Yes      | 0         | determines the left shift of scannerRect
+scannerLineInterval    | number | Yes      | 3000      | determines the interval of scannerLine's movement
+scannerRectCornerColor | string | Yes      | `#09BB0D` | determines the color of scannerRectCorner
+
+[0]: https://github.com/cyqresig/ReactNativeComponentDemos
+[1]: https://github.com/zxing/zxing
+[2]: http://cyqresig.github.io/img/react-native-smart-barcode-preview-ios-v1.0.0.gif
+[3]: http://cyqresig.github.io/img/react-native-smart-barcode-preview-android-v1.0.0.gif

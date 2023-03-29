@@ -1,4 +1,12 @@
-/example
-/example/*
-/example/package.json
-.idea/
+*.[aod]
+*.DS_Store
+.DS_Store
+*Thumbs.db
+*.iml
+.gradle
+.idea
+node_modules
+npm-debug.log
+/android/build
+/ios/**/*xcuserdata*
+/ios/**/*xcshareddata*
