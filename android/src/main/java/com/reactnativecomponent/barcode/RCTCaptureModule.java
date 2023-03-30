@@ -1,8 +1,8 @@
 package com.reactnativecomponent.barcode;
 
 import android.os.Environment;
-import android.support.annotation.Nullable;
-import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -10,6 +10,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.google.zxing.BarcodeFormat;
 import com.reactnativecomponent.barcode.decoding.DecodeUtil;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
