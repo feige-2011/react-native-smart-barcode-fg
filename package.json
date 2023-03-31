@@ -1,6 +1,6 @@
 {
   "name": "react-native-smart-barcode-fg",
-  "version": "5.0.6",
+  "version": "5.0.7",
   "description": "A smart barcode scanner component for React Native app",
   "main": "Barcode.js",
   "scripts": {
@@ -24,5 +24,9 @@
   "homepage": "https://github.com/feige-2011/react-native-smart-barcode-fg#readme",
   "peerDependencies": {
     "react-native": ">=0.40.0"
+  },
+  "dependencies": {
+    "react-native-svg": "^13.9.0",
+    "prop-types": "latest"
   }
 }
